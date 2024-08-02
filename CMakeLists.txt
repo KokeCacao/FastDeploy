@@ -6,11 +6,10 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 find_package(OpenCV REQUIRED COMPONENTS core imgproc)
 find_package(onnxruntime REQUIRED)
 find_package(Eigen3 REQUIRED)
-message("OpenCV_LIBS: ${OpenCV_LIBS} ${OPENCV_core_FOUND} ${OPENCV_WORLD_FOUND}")
+message("OpenCV_LIBS: ${OpenCV_LIBS} ${OPENCV_core_FOUND} ${OPENCV_WORLD_FOUND}, Include: ${OpenCV_INCLUDE_DIRS}, Version: ${OpenCV_VERSION}, Libs: ${OpenCV_LIBS}")
 
 # Add OpenCV
-target_include_directories(fastdeploy_ppocr PRIVATE ${OpenCV_INCLUDE_DIRS})
-target_link_libraries(fastdeploy_ppocr PRIVATE ${OpenCV_LIBS})
+include_directories(FastDeploy_Core PRIVATE ${OpenCV_INCLUDE_DIRS})
 
 option(WITH_CUDA "Whether WITH_GPU=ON, will enable onnxruntime-gpu/paddle-infernce-gpu/poros-gpu" OFF)
 
@@ -44,6 +43,7 @@ target_include_directories(FastDeploy_Core PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>  # for build
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDE}>  # for install
 )
+target_link_libraries(FastDeploy_Core PRIVATE ${OpenCV_LIBS})
 target_link_libraries(FastDeploy_Core PRIVATE onnxruntime::onnxruntime)
 
 set(BACKEND_ONNXRUNTIME_SRC
